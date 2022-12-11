@@ -21,8 +21,9 @@ orderMCMCplus1<-function(n,nsmall,startorder,iterations,stepsave,moveprobs,paren
   L2 <- vector() # stores its log BGe score of a DAG
   L3 <- vector() # stores the log BGe score of the entire order
   L4 <- list() # stores the orders as permutations
-  
-  zlimit<- min(floor(iterations/stepsave) + 1,1000) # number of outer iterations
+
+  # zlimit<- min(floor(iterations/stepsave) + 1,1000) # number of outer iterations
+  zlimit <- floor(iterations/stepsave)
 
   length(L1) <- zlimit
   length(L2) <- zlimit
