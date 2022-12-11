@@ -1,4 +1,4 @@
-Package: BiDAG
+Package: bidag
 Type: Package
 Title: Bayesian Inference for Directed Acyclic Graphs
 Version: 2.1.1

@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // extractT
 NumericVector extractT(IntegerVector xs, IntegerVector ys, NumericMatrix ts);
-RcppExport SEXP _BiDAG_extractT(SEXP xsSEXP, SEXP ysSEXP, SEXP tsSEXP) {
+RcppExport SEXP _bidag_extractT(SEXP xsSEXP, SEXP ysSEXP, SEXP tsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -25,7 +25,7 @@ END_RCPP
 }
 // collectC
 NumericVector collectC(IntegerVector xs, NumericVector ys, int n);
-RcppExport SEXP _BiDAG_collectC(SEXP xsSEXP, SEXP ysSEXP, SEXP nSEXP) {
+RcppExport SEXP _bidag_collectC(SEXP xsSEXP, SEXP ysSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -38,7 +38,7 @@ END_RCPP
 }
 // collectCcatwt
 NumericMatrix collectCcatwt(IntegerVector xs, IntegerVector ys, NumericVector ws, int n, int m);
-RcppExport SEXP _BiDAG_collectCcatwt(SEXP xsSEXP, SEXP ysSEXP, SEXP wsSEXP, SEXP nSEXP, SEXP mSEXP) {
+RcppExport SEXP _bidag_collectCcatwt(SEXP xsSEXP, SEXP ysSEXP, SEXP wsSEXP, SEXP nSEXP, SEXP mSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -53,7 +53,7 @@ END_RCPP
 }
 // collectCcat
 IntegerMatrix collectCcat(IntegerVector xs, IntegerVector ys, int n, int m);
-RcppExport SEXP _BiDAG_collectCcat(SEXP xsSEXP, SEXP ysSEXP, SEXP nSEXP, SEXP mSEXP) {
+RcppExport SEXP _bidag_collectCcat(SEXP xsSEXP, SEXP ysSEXP, SEXP nSEXP, SEXP mSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -67,7 +67,7 @@ END_RCPP
 }
 // takefirst
 NumericVector takefirst(NumericVector xs, int pos);
-RcppExport SEXP _BiDAG_takefirst(SEXP xsSEXP, SEXP posSEXP) {
+RcppExport SEXP _bidag_takefirst(SEXP xsSEXP, SEXP posSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -79,7 +79,7 @@ END_RCPP
 }
 // takelast
 NumericVector takelast(NumericVector xs, int pos, int n);
-RcppExport SEXP _BiDAG_takelast(SEXP xsSEXP, SEXP posSEXP, SEXP nSEXP) {
+RcppExport SEXP _bidag_takelast(SEXP xsSEXP, SEXP posSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -92,16 +92,16 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_BiDAG_extractT", (DL_FUNC) &_BiDAG_extractT, 3},
-    {"_BiDAG_collectC", (DL_FUNC) &_BiDAG_collectC, 3},
-    {"_BiDAG_collectCcatwt", (DL_FUNC) &_BiDAG_collectCcatwt, 5},
-    {"_BiDAG_collectCcat", (DL_FUNC) &_BiDAG_collectCcat, 4},
-    {"_BiDAG_takefirst", (DL_FUNC) &_BiDAG_takefirst, 2},
-    {"_BiDAG_takelast", (DL_FUNC) &_BiDAG_takelast, 3},
+    {"_bidag_extractT", (DL_FUNC) &_bidag_extractT, 3},
+    {"_bidag_collectC", (DL_FUNC) &_bidag_collectC, 3},
+    {"_bidag_collectCcatwt", (DL_FUNC) &_bidag_collectCcatwt, 5},
+    {"_bidag_collectCcat", (DL_FUNC) &_bidag_collectCcat, 4},
+    {"_bidag_takefirst", (DL_FUNC) &_bidag_takefirst, 2},
+    {"_bidag_takelast", (DL_FUNC) &_bidag_takelast, 3},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_BiDAG(DllInfo *dll) {
+RcppExport void R_init_bidag(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
