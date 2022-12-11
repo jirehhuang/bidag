@@ -100,6 +100,11 @@ scorepossibleparents.alias<-function(parenttable,aliases,n,param,
                                      updatenodes=c(1:n),parentmaps=NULL,
                                      numparents=NULL,numberofparentsvec=NULL){
 
+  bcb:::debug_cli(TRUE, cli::cli_alert_danger,
+                  "calling {.fn scorepossibleparents.alias}")
+
+  browser()  # TODO: making sure this isn't used
+
   listz<-vector("list",n)
 
   for (i in updatenodes) {
