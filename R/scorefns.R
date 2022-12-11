@@ -135,6 +135,16 @@ PLUS1<-function(n,aliases,updatenodes=c(1:n),blacklistparents=NULL) {
 scorepossibleparents.PLUS1<-function(parenttable,plus1lists,n,param,updatenodes,
                                      parentmaps,numparents,numberofparentsvec){
 
+  ## redirect to new function
+  return(bcb_scorepossibleparents.PLUS1(parenttable = parenttable,
+                                        plus1lists = plus1lists,
+                                        n = n,
+                                        param = param,
+                                        updatenodes = updatenodes,
+                                        parentmaps = parentmaps,
+                                        numparents = numparents,
+                                        numberofparentsvec = numberofparentsvec))
+
   listy<-vector("list",n)
   aliases<-plus1lists$aliases
 
