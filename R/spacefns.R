@@ -36,7 +36,10 @@ newspaceskel<-function(n,startspace,currspace,softlimit,hardlimit,posterior,blac
              newadj[,toomanyneib]<-(1*(!blacklist&(startspace|mdag)))[,toomanyneib]
            }
            tootoomanyneib<-which(apply(newadj,2,sum)>hardlimit)
-           if(length(tootoomanyneib)>0) {newadj[,tootoomanyneib]<-mdag[,tootoomanyneib]}
+           if(length(tootoomanyneib)>0) {
+             mdag<-modelpcore(MCMCtrace,p=posterior,pdag=FALSE)  # Error in newspaceskel(n, startskeleton, oldadj, softlimit, hardlimit, : object 'mdag' not found
+             newadj[,tootoomanyneib]<-mdag[,tootoomanyneib]
+           }
            tootoomanyneib<-which(apply(newadj,2,sum)>hardlimit)
            if(length(tootoomanyneib)>0) {newadj[,tootoomanyneib]<-currspace[,tootoomanyneib]}
          }
