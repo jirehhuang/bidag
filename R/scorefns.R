@@ -148,7 +148,8 @@ scorepossibleparents.PLUS1<-function(parenttable,plus1lists,n,param,updatenodes,
                                         updatenodes = updatenodes,
                                         parentmaps = parentmaps,
                                         numparents = numparents,
-                                        numberofparentsvec = numberofparentsvec))
+                                        numberofparentsvec = numberofparentsvec,
+                                        use_bnlearn = FALSE))
 
   listy<-vector("list",n)
   aliases<-plus1lists$aliases

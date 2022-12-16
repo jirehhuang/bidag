@@ -7,7 +7,8 @@ bcb_scorepossibleparents.PLUS1 <- function(parenttable,
                                            updatenodes,
                                            parentmaps,
                                            numparents,
-                                           numberofparentsvec){
+                                           numberofparentsvec,
+                                           use_bnlearn = FALSE){
 
   listy <- vector("list", n)
   aliases <- plus1lists$aliases
@@ -24,7 +25,8 @@ bcb_scorepossibleparents.PLUS1 <- function(parenttable,
     temp_data <- param$data[param$settings$interventions != param$labels[i],,
                             drop = FALSE]
     temp_param <- BiDAG::scoreparameters(scoretype = "bde",
-                                         data = temp_data)
+                                         data = temp_data,
+                                         bdepar = list(chi = param$chi, edgepf = param$pf))
 
     ## for every list
     ## computing scores for adding j -> i?
@@ -32,7 +34,19 @@ bcb_scorepossibleparents.PLUS1 <- function(parenttable,
 
       if (j == 1){
 
-        scoretemp <-
+        scoretemp <- if (use_bnlearn){
+
+          bcb_TableDAGscore.alias(parentrows = parenttable[[i]],
+                                  j = i,
+                                  n = n,
+                                  alias = aliases[[i]][j, which(!is.na(aliases[[i]][j,]))],
+                                  param = param,
+                                  parentmaps = parentmaps[[i]],
+                                  numparents = numparents[i],
+                                  numberofparentsvec = numberofparentsvec[[i]],
+                                  plus1 = FALSE)
+        } else{
+
           BiDAG:::TableDAGscore.alias(parentrows = parenttable[[i]],
                                       j = i,
                                       n = n,
@@ -41,9 +55,22 @@ bcb_scorepossibleparents.PLUS1 <- function(parenttable,
                                       parentmaps = parentmaps[[i]],
                                       numparents = numparents[i],
                                       numberofparentsvec = numberofparentsvec[[i]])
+        }
       } else{
 
-        scoretemp <-
+        scoretemp <- if (use_bnlearn){
+
+          bcb_TableDAGscore.alias(parentrows = parenttable[[i]],
+                                  j = i,
+                                  n = n,
+                                  alias = aliases[[i]][j, which(!is.na(aliases[[i]][j,]))],
+                                  param = param,
+                                  parentmaps = parentmaps[[i]],
+                                  numparents = numparents[i],
+                                  numberofparentsvec = numberofparentsvec[[i]],
+                                  plus1 = TRUE)
+        } else{
+
           BiDAG:::TableDAGscore.alias.plus1(parentrows = parenttable[[i]],
                                             j = i,
                                             n = n,
@@ -52,6 +79,7 @@ bcb_scorepossibleparents.PLUS1 <- function(parenttable,
                                             parentmaps = parentmaps[[i]],
                                             numparents = numparents[i],
                                             numberofparentsvec = numberofparentsvec[[i]])
+        }
       }
       listz[[j]] <- as.matrix(scoretemp)
     }
