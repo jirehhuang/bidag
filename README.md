@@ -16,5 +16,5 @@ Run the following code in R to install this package from GitHub with its
 dependencies.
 
 ``` r
-devtools::install_github("jirehhuang/bidag", dependencies = TRUE)
+devtools::install_github("jirehhuang/bidag2", dependencies = TRUE)
 ```
