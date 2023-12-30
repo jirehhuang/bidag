@@ -131,18 +131,18 @@ space, when FALSE (default) the undirected skeleton used as a search space}
 \item{object}{object of class 'iterativeMCMC'}
 }
 \value{
-Object of class \code{iterativeMCMC}, which contains log-score trace as well as adjacency matrix of the maximum scoring DAG, its score and the order score. 
+Object of class \code{iterativeMCMC}, which contains log-score trace as well as adjacency matrix of the maximum scoring DAG, its score and the order score.
 The output can optionally include DAGs sampled in MCMC iterations and the score tables. Optional output is regulated by the parameters \code{chainout} and \code{scoreout}. See \code{\link{iterativeMCMC class}} for a detailed class structure.
 }
 \description{
-This function implements an iterative search for the maximum a posteriori (MAP) DAG, 
-by means of order MCMC (arXiv:1803.07859v3).  At each iteration, the current search space is expanded by 
-allowing each node to have up to one additional parent not already included in the search space. 
-By default the initial search space is obtained through the PC-algorithm (using the functions \code{\link[pcalg]{skeleton}} and \code{\link[pcalg]{pc}} from the `pcalg' package [Kalisch et al, 2012]).  
-At each iteration order MCMC is employed to search for the MAP DAG.  
-The edges in the MAP DAG are added to the initial search space to provide 
-the search space for the next iteration.  The algorithm iterates until no 
-further score improvements can be achieved by expanding the search space.  
+This function implements an iterative search for the maximum a posteriori (MAP) DAG,
+by means of order MCMC (arXiv:1803.07859v3).  At each iteration, the current search space is expanded by
+allowing each node to have up to one additional parent not already included in the search space.
+By default the initial search space is obtained through the PC-algorithm (using the functions \code{\link[pcalg]{skeleton}} and \code{\link[pcalg]{pc}} from the `pcalg' package [Kalisch et al, 2012]).
+At each iteration order MCMC is employed to search for the MAP DAG.
+The edges in the MAP DAG are added to the initial search space to provide
+the search space for the next iteration.  The algorithm iterates until no
+further score improvements can be achieved by expanding the search space.
 The final search space may be used for the sampling versions of \code{\link{orderMCMC}} and \code{\link{partitionMCMC}}.
 }
 \note{

@@ -1,8 +1,8 @@
 newspaceskel<-function(n,startspace,currspace,softlimit,hardlimit,posterior,blacklist,
                        MCMCtrace=NULL,mergetype="skeleton") {
-  
+
   switch(mergetype,
-         "dag" = { 
+         "dag" = {
            mdag<-modelpcore(MCMCtrace,p=posterior,pdag=FALSE)
            newadj<-1*(!blacklist&(startspace|mdag))
            toomanyneib<-which(apply(newadj,2,sum)>hardlimit)
@@ -10,7 +10,7 @@ newspaceskel<-function(n,startspace,currspace,softlimit,hardlimit,posterior,blac
            toomanyneib<-which(apply(newadj,2,sum)>hardlimit)
            if(length(toomanyneib)>0){newadj[,toomanyneib]<-currspace[,toomanyneib]}
          },
-         "cpdag" = { 
+         "cpdag" = {
            mcp<-modelpcore(n,MCMCtrace,p=posterior,pdag=TRUE)
            newadj<-1*(!blacklist&(startspace|mcp))
            toomanyneib<-which(apply(newadj,2,sum)>softlimit)
@@ -23,7 +23,7 @@ newspaceskel<-function(n,startspace,currspace,softlimit,hardlimit,posterior,blac
            tootoomanyneib<-which(apply(newadj,2,sum)>hardlimit)
            if(length(tootoomanyneib)>0) {newadj[,tootoomanyneib]<-currspace[,tootoomanyneib]}
          },
-         "skeleton" = { 
+         "skeleton" = {
            mskel<-1*(modelpcore(MCMCtrace,p=posterior,pdag=FALSE)|t(modelpcore(MCMCtrace,p=posterior,pdag=FALSE)))
            newadj<-1*(!blacklist&(startspace|mskel))
            toomanyneib<-which(apply(newadj,2,sum)>4)
@@ -47,12 +47,12 @@ newspaceskel<-function(n,startspace,currspace,softlimit,hardlimit,posterior,blac
   return(newadj)
 }
 
-newspacemap<-function(n,startspace,currspace,softlimit,hardlimit,blacklist, 
+newspacemap<-function(n,startspace,currspace,softlimit,hardlimit,blacklist,
                       maxdag=NULL,mergetype="skeleton",accum) {
-  
+
   if(!is.matrix(maxdag)) maxdag<-as.matrix(maxdag)
   switch(mergetype,
-         "dag" = { 
+         "dag" = {
            maxdag<-maxdag
            newadj<-1*(!blacklist&(startspace|maxdag))
            toomanyneib<-which(apply(newadj,2,sum)>hardlimit)
@@ -66,7 +66,7 @@ newspacemap<-function(n,startspace,currspace,softlimit,hardlimit,blacklist,
              newadj<-newnewadj
            }
          },
-         "cpdag" = { 
+         "cpdag" = {
            maxcp<-dagadj2cpadj(maxdag)
            newadj<-1*(!blacklist&(startspace|maxcp))
            toomanyneib<-which(apply(newadj,2,sum)>softlimit)
@@ -84,7 +84,7 @@ newspacemap<-function(n,startspace,currspace,softlimit,hardlimit,blacklist,
              newadj<-newnewadj
            }
          },
-         "skeleton" = { 
+         "skeleton" = {
            maxskel<-1*(maxdag|transp(maxdag))
            newadj<-1*(!blacklist&(startspace|maxskel))
            toomanyneib<-which(apply(newadj,2,sum)>7)
@@ -112,14 +112,14 @@ newspacemap<-function(n,startspace,currspace,softlimit,hardlimit,blacklist,
 
 definestartspace<-function(alpha,param,cpdag=FALSE,algo="pc",alphainit=NULL) {
   if(is.null(alphainit)) {alphainit<-alpha}
-  
+
   local_type <- param$type
   if(local_type=="usr") {
     if(param$pctesttype%in%c("bde","bge","bdecat")) {
       local_type<-param$pctesttype
-    } 
+    }
   }
-  
+
   if(param$DBN){
     if(param$stationary) {
     othersliceskel <- definestartspace(alpha,param$otherslices,cpdag=FALSE,algo="pc")
@@ -140,13 +140,13 @@ definestartspace<-function(alpha,param,cpdag=FALSE,algo="pc",alphainit=NULL) {
       #diag(startspace[param$trans$rows,param$trans$cols])<-1
 }
   } else { # otherwise use old versions
-    
+
     if(local_type=="bde") {
       if(cpdag){
         pc.skel<-pc(suffStat = list(d1=param$d1,d0=param$d0,data=param$data),
                     indepTest = weightedbinCItest, alpha = alpha, labels = colnames(param$data),
                     verbose = FALSE)
-        
+
       } else {
         pc.skel<-pcalg::skeleton(suffStat = list(d1=param$d1,d0=param$d0,data=param$data),
                                  indepTest = weightedbinCItest, alpha = alpha, labels = colnames(param$data),
@@ -157,7 +157,7 @@ definestartspace<-function(alpha,param,cpdag=FALSE,algo="pc",alphainit=NULL) {
         pc.skel<-pc(suffStat = param,
                     indepTest = weightedcatCItest, alpha = alpha, labels = colnames(param$data),
                     verbose = FALSE)
-        
+
       } else {
         pc.skel<-pcalg::skeleton(suffStat = param,
                                  indepTest = weightedcatCItest, alpha = alpha, labels = colnames(param$data),
@@ -184,14 +184,14 @@ definestartspace<-function(alpha,param,cpdag=FALSE,algo="pc",alphainit=NULL) {
         pc.skel<-pc(suffStat = param,
                     indepTest = usrCItest, alpha = alpha, labels = colnames(param$data),
                     verbose = FALSE)
-        
+
       } else {
         pc.skel<-pcalg::skeleton(suffStat = param,
                                  indepTest = usrCItest, alpha = alpha, labels = colnames(param$data),
                                  verbose = FALSE)
       }
     }
-    
+
     g<-pc.skel@graph
     startspace<-1*(graph2m(g))
   }

@@ -6,25 +6,25 @@ orderMCMCmain<-function(param,iterations,stepsave,MAP=TRUE, posterior=0.5,
   result<-list()
   maxobj<-list()
   MCMCtraces<-list()
-  
+
   n<-param$n
   nsmall<-param$nsmall
   matsize<-ifelse(param$DBN,n+nsmall,n)
-  
-  #defining startorder and updatenodes 
-  if(!param$DBN) { 
-    
+
+  #defining startorder and updatenodes
+  if(!param$DBN) {
+
     if(param$bgn!=0) {
       updatenodes<-c(1:n)[-param$bgnodes]
-    } else { 
+    } else {
       updatenodes<-c(1:n)
     }
-    
+
   } else { #for DBNs startorder is defined in main.R
     updatenodes<-c(1:nsmall)
   }
   maxorder<-startorder
-  
+
   #creating blacklist objects
   if (is.null(blacklist)) {
     blacklist<-matrix(0,nrow=matsize,ncol=matsize)
@@ -43,36 +43,36 @@ orderMCMCmain<-function(param,iterations,stepsave,MAP=TRUE, posterior=0.5,
     scoretable<-scoretable$tables
   } else {
     if (is.null(startspace)){
-        startspace<-definestartspace(alpha,param,cpdag=cpdag,algo="pc")
-      }
+      startspace<-definestartspace(alpha,param,cpdag=cpdag,algo="pc")
+    }
     startskeleton<-1*(startspace&!blacklist)
     if(!is.null(addspace)) { startskel<-1*((addspace|startskeleton)&!blacklist)
     } else {startskel<-startskeleton }
   }
-  
+
   blacklistparents<-list()
   for  (i in 1:matsize) {
     blacklistparents[[i]]<-which(blacklist[,i]==1)
   }
-  
+
   if(verbose) {
     cat(paste("maximum parent set size is", max(apply(startskel,2,sum))),"\n")
-    }
+  }
   if(max(apply(startskel,2,sum))>hardlimit) {
     stop("the size of maximal parent set is higher that the hardlimit; redifine the search space or increase the hardlimit!")
   }
-  
+
   #tablestart<-Sys.time()
   #computing score tables
   ptab<-listpossibleparents.PC.aliases(startskel,isgraphNEL=FALSE,n,updatenodes)
-  
+
   if (verbose) {
-   cat("core space defined, score table are being computed \n")
-   flush.console()
+    cat("core space defined, score table are being computed \n")
+    flush.console()
   }
-  
+
   if (plus1==FALSE) {
-  
+
     parenttable<-ptab$parenttable # basic parenttable without plus1 lists
     aliases<-ptab$aliases #aliases for each node since all nodes in parent tables are named as 1,2,3,4. not real parent names
     numberofparentsvec<-ptab$numberofparentsvec
@@ -81,77 +81,76 @@ orderMCMCmain<-function(param,iterations,stepsave,MAP=TRUE, posterior=0.5,
     tablestart<-Sys.time()
     if(is.null(scoretable)) {
       scoretable<-scorepossibleparents.alias(parenttable,aliases,n,param,updatenodes,rowmaps,
-                                         numparents,numberofparentsvec)
+                                             numparents,numberofparentsvec)
     }
     posetparenttable<-poset(parenttable,numberofparentsvec,rowmaps,n,updatenodes)
-  
-  if(MAP==TRUE){
-    maxmatrices<-posetscoremax(posetparenttable,scoretable,numberofparentsvec,rowmaps,
-                               n,plus1lists=NULL,updatenodes)
-    tableend<-Sys.time()
-    MCMCresult<-orderMCMCbasemax(n,nsmall,startorder,iterations,stepsave,moveprobs,parenttable,
-                                 scoretable,aliases,numparents,rowmaps,maxmatrices,
-                                 numberofparentsvec,gamma=gamma,bgnodes=param$bgnodes,matsize=matsize,
-                                 chainout=chainout,compress=compress)
 
-    mcmcend<-Sys.time()
-  } else {
-    bannedscore<-poset.scores(posetparenttable,scoretable,numberofparentsvec,rowmaps,
-                              n,plus1lists=NULL,ptab$numparents,updatenodes=updatenodes)
-    tableend<-Sys.time()
-    MCMCresult<-orderMCMCbase(n,nsmall,startorder,iterations,stepsave,moveprobs,parenttable,
-                              scoretable,aliases,numparents,rowmaps,
-                              bannedscore,numberofparentsvec,gamma=gamma,
-                              bgnodes=param$bgnodes,matsize=matsize,chainout=chainout,compress=compress)
-    mcmcend<-Sys.time()
-    
-  }
-  
-} else {
-  parenttable<-ptab$parenttable # basic parenttable without plus1 lists
-  aliases<-ptab$aliases #aliases for each node since all nodes in parent tables are done as 1,2,3,4... not real parent names
-  numberofparentsvec<-ptab$numberofparentsvec
-  numparents<-ptab$numparents
-  plus1lists<-PLUS1(matsize,aliases,updatenodes,blacklistparents)
-  rowmaps<-parentsmapping(parenttable,numberofparentsvec,n,updatenodes)
-  tablestart<-Sys.time()
-  if(is.null(scoretable)) {
-    scoretable<-scorepossibleparents.PLUS1(parenttable,plus1lists,n,param,updatenodes,
-                                           rowmaps,numparents,numberofparentsvec) 
-  }
-    posetparenttable<-poset(parenttable,numberofparentsvec,rowmaps,n,updatenodes)
-  
-  if(MAP==TRUE){
-    maxmatrices<-posetscoremax(posetparenttable,scoretable,numberofparentsvec,
-                               rowmaps,n,plus1lists=plus1lists,updatenodes)
-  } else {
-    bannedscore<-poset.scores(posetparenttable,scoretable,ptab$numberofparentsvec,rowmaps,
-                              n,plus1lists=plus1lists,ptab$numparents,updatenodes)
-  }
+    if(MAP==TRUE){
+      maxmatrices<-posetscoremax(posetparenttable,scoretable,numberofparentsvec,rowmaps,
+                                 n,plus1lists=NULL,updatenodes)
+      tableend<-Sys.time()
+      MCMCresult<-orderMCMCbasemax(n,nsmall,startorder,iterations,stepsave,moveprobs,parenttable,
+                                   scoretable,aliases,numparents,rowmaps,maxmatrices,
+                                   numberofparentsvec,gamma=gamma,bgnodes=param$bgnodes,matsize=matsize,
+                                   chainout=chainout,compress=compress)
 
-  if(verbose) {
-    cat(paste("score tables computed, orderMCMC is running"),"\n")
-    flush.console()
-  }
-
-  tableend<-Sys.time()
-    
-  #running MCMC scheme   
-  if(MAP) {
-    MCMCresult<-orderMCMCplus1max(n,nsmall,startorder,iterations,stepsave,moveprobs,parenttable,
-                                      scoretable,aliases,numparents,rowmaps,plus1lists,maxmatrices,numberofparentsvec,
-                                      gamma=gamma,bgnodes=param$bgnodes,matsize=matsize,chainout=chainout,compress=compress)
-    
+      mcmcend<-Sys.time()
     } else {
-    MCMCresult<-orderMCMCplus1(n,nsmall,startorder,iterations,stepsave,moveprobs,parenttable,
-                                   scoretable,aliases,numparents,rowmaps,plus1lists,
-                                   bannedscore,numberofparentsvec,gamma=gamma,
-                                   bgnodes=param$bgnodes,matsize=matsize,chainout=chainout,compress=compress)
+      bannedscore<-poset.scores(posetparenttable,scoretable,numberofparentsvec,rowmaps,
+                                n,plus1lists=NULL,ptab$numparents,updatenodes=updatenodes)
+      tableend<-Sys.time()
+      MCMCresult<-orderMCMCbase(n,nsmall,startorder,iterations,stepsave,moveprobs,parenttable,
+                                scoretable,aliases,numparents,rowmaps,
+                                bannedscore,numberofparentsvec,gamma=gamma,
+                                bgnodes=param$bgnodes,matsize=matsize,chainout=chainout,compress=compress)
+      mcmcend<-Sys.time()
+
     }
-    
-   mcmcend<-Sys.time()
-  
-}
+
+  } else {
+    parenttable<-ptab$parenttable # basic parenttable without plus1 lists
+    aliases<-ptab$aliases #aliases for each node since all nodes in parent tables are done as 1,2,3,4... not real parent names
+    numberofparentsvec<-ptab$numberofparentsvec
+    numparents<-ptab$numparents
+    plus1lists<-PLUS1(matsize,aliases,updatenodes,blacklistparents)
+    rowmaps<-parentsmapping(parenttable,numberofparentsvec,n,updatenodes)
+    tablestart<-Sys.time()
+    posetparenttable<-poset(parenttable,numberofparentsvec,rowmaps,n,updatenodes)
+    if(is.null(scoretable)) {
+      scoretable<-scorepossibleparents.PLUS1(parenttable,plus1lists,n,param,updatenodes,
+                                             rowmaps,numparents,numberofparentsvec)
+    }
+    if(MAP==TRUE){
+      maxmatrices<-posetscoremax(posetparenttable,scoretable,numberofparentsvec,
+                                 rowmaps,n,plus1lists=plus1lists,updatenodes)
+    } else {
+      bannedscore<-poset.scores(posetparenttable,scoretable,ptab$numberofparentsvec,rowmaps,
+                                n,plus1lists=plus1lists,ptab$numparents,updatenodes)
+    }
+
+    if(verbose) {
+      cat(paste("score tables computed, orderMCMC is running"),"\n")
+      flush.console()
+    }
+
+    tableend<-Sys.time()
+
+    #running MCMC scheme
+    if(MAP) {
+      MCMCresult<-orderMCMCplus1max(n,nsmall,startorder,iterations,stepsave,moveprobs,parenttable,
+                                    scoretable,aliases,numparents,rowmaps,plus1lists,maxmatrices,numberofparentsvec,
+                                    gamma=gamma,bgnodes=param$bgnodes,matsize=matsize,chainout=chainout,compress=compress)
+
+    } else {
+      MCMCresult<-orderMCMCplus1(n,nsmall,startorder,iterations,stepsave,moveprobs,parenttable,
+                                 scoretable,aliases,numparents,rowmaps,plus1lists,
+                                 bannedscore,numberofparentsvec,gamma=gamma,
+                                 bgnodes=param$bgnodes,matsize=matsize,chainout=chainout,compress=compress)
+    }
+
+    mcmcend<-Sys.time()
+
+  }
 
   #defining result object
   if(chainout) {
@@ -165,13 +164,13 @@ orderMCMCmain<-function(param,iterations,stepsave,MAP=TRUE, posterior=0.5,
     }
     #MCMCtraces$DAGscores<-MCMCresult$DAGscores
     MCMCtraces$orderscores<-MCMCresult$orderscores
-  } 
-  
-  
+  }
+
+
   maxobj<-storemaxMCMC(MCMCresult,param)
   maxN<-which.max(MCMCresult$DAGscores)
   #maxobj$reach<-maxN
-  
+
   if (scoreout){
     if(chainout){output<-4}
     else{output<-3}
@@ -179,7 +178,7 @@ orderMCMCmain<-function(param,iterations,stepsave,MAP=TRUE, posterior=0.5,
     if(chainout) {output<-2}
     else {output<-1}
   }
-  
+
   result$DAG<-maxobj$DAG
   result$CPDAG<-Matrix(graph2m(dag2cpdag(m2graph(result$DAG))),sparse=TRUE)
   result$score<-maxobj$score

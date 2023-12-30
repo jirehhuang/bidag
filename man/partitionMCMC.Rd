@@ -92,12 +92,12 @@ partitionMCMC(
 \item{object}{object of class 'partitionMCMC'}
 }
 \value{
-Object of class \code{partitionMCMC}, which contains log-score trace as well 
+Object of class \code{partitionMCMC}, which contains log-score trace as well
 as adjacency matrix of the maximum scoring DAG, its score and the order score. Additionally, returns all sampled DAGs (represented by their adjacency matrices), their scores,
 orders and partitions See \code{\link{partitionMCMC class}}.
 }
 \description{
-This function implements the partition MCMC algorithm for the structure learning of Bayesian networks.  This procedure provides an unbiased sample from the posterior distribution of DAGs given the data. 
+This function implements the partition MCMC algorithm for the structure learning of Bayesian networks.  This procedure provides an unbiased sample from the posterior distribution of DAGs given the data.
 The search space can be defined either by a preliminary run of the function \code{iterativeMCMC} or by a given adjacency matrix (which can be the full matrix with zero on the diagonal, to consider the entire space of DAGs, feasible only for a limited number of nodes).
 }
 \note{

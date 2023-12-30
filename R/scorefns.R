@@ -1,7 +1,7 @@
 #author Polina Suter, Jack Kuipers, the code partly derived from the order MCMC implementation from Kuipers J, Moffa G (2017) <doi:10.1080/01621459.2015.1133426>
 TableDAGscore.alias <- function(parentrows, j, n,alias,param,parentmaps=NULL,numparents=NULL,
                                 numberofparentsvec=NULL) {
-  
+
   if (param$type=="bde" & !param$DBN) {
     nrows<-nrow(parentrows)
     parentnodes<- alias[parentrows[nrows,!is.na(parentrows[nrows,])]]
@@ -16,9 +16,9 @@ TableDAGscore.alias <- function(parentrows, j, n,alias,param,parentmaps=NULL,num
     for (i in 1:nrows)  {
       parentnodes <- alias[parentrows[i,!is.na(parentrows[i,])]]
       P_local[i]<-DAGcorescore(j,parentnodes,n,param)
-    } 
+    }
   }
-  
+
   return(P_local)
 }
 
@@ -35,15 +35,15 @@ TableDAGscore.alias.plus1<-function(parentrows, j, n,alias,param,parentmaps=NULL
     parentnodes <- alias[parentrows[nrows,!is.na(parentrows[nrows,])]+1]
     addpar <- alias[1]
     P_local <- DAGcattablescoreplus1(j,parentnodes,addpar,n,param,parentrows,parentmaps,numparents,numberofparentsvec)
-  } else { 
+  } else {
     nrows<-nrow(parentrows)
     P_local <- numeric(nrows)
     for (i in 1:nrows)  {
       parentnodes <- alias[c(1,parentrows[i,!is.na(parentrows[i,])]+1)]
       P_local[i] <- DAGcorescore(j,parentnodes,n,param)
-    } 
+    }
   }
-  
+
   return(P_local)
 }
 

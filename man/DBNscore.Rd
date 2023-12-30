@@ -11,14 +11,14 @@ DBNscore(scorepar, incidence)
 
 \item{incidence}{a square matrix, representing initial and transitional structure of a DBN; the size of matrix is 2*nsmall+bgn, where nsmall is the number of variables per time slice excluding static nodes and bgn is the number of static variables
  the matrix entries are in \code{\{0,1\}} such that \code{incidence[i,j]} equals
-  1 if there is a directed edge from node \code{i} to node \code{j} in the DAG and 
+  1 if there is a directed edge from node \code{i} to node \code{j} in the DAG and
 \code{incidence[i,j]} equals 0 otherwise}
 }
 \value{
 the log of the BGe or BDe score of the DBN
 }
 \description{
-This function calculates the score of a DBN defined by its compact adjacency matrix. 
+This function calculates the score of a DBN defined by its compact adjacency matrix.
 Acceptable data matrices are homogeneous with all variables of the same type: continuous,
 binary or categorical.  The BGe score is evaluated in the case of continuous data and the BDe score is evaluated for binary and categorical variables.
 }

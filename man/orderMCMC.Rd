@@ -108,16 +108,16 @@ space, if FALSE (default) the full undirected skeleton will be used as the searc
 \item{object}{object of class 'orderMCMC'}
 }
 \value{
-Object of class \code{orderMCMC}, which contains log-score trace of sampled DAGs as well 
-as adjacency matrix of the maximum scoring DAG, its score and the order score. The output can optionally include DAGs sampled in MCMC iterations and the score tables. 
+Object of class \code{orderMCMC}, which contains log-score trace of sampled DAGs as well
+as adjacency matrix of the maximum scoring DAG, its score and the order score. The output can optionally include DAGs sampled in MCMC iterations and the score tables.
 Optional output is regulated by the parameters \code{chainout} and \code{scoreout}. See \code{\link{orderMCMC class}} for a detailed class structure.
 }
 \description{
 This function implements the order MCMC algorithm for the structure learning of Bayesian networks. This function can be used
 for MAP discovery and for sampling from the posterior distribution of DAGs given the data.
-Due to the superexponential size of the search space as the number of nodes increases, the 
+Due to the superexponential size of the search space as the number of nodes increases, the
 MCMC search is performed on a reduced search space.
-By default the search space is limited to the skeleton found through the PC algorithm by means of conditional independence tests 
+By default the search space is limited to the skeleton found through the PC algorithm by means of conditional independence tests
 (using the functions \code{\link[pcalg]{skeleton}} and \code{\link[pcalg]{pc}} from the `pcalg' package [Kalisch et al, 2012]).
 It is also possible to define an arbitrary search space by inputting an adjacency matrix, for example estimated by partial correlations or other network algorithms.
 Also implemented is the possibility to expand the default or input search space, by allowing each node in the network to have one additional parent.  This offers improvements in the learning and sampling of Bayesian networks.

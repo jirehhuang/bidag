@@ -3,20 +3,20 @@
 
 orderMCMCplus1<-function(n,nsmall,startorder,iterations,stepsave,moveprobs,parenttable,scoretable,aliases,numparents,rowmaps,
                          plus1lists,scoresmatrices,numberofparentsvec,gamma=1,bgnodes,matsize,chainout=FALSE,compress=TRUE){
-  
+
   result<-list()
-  
-  
+
+
   if(!is.null(bgnodes)) {
     mainnodes<-c(1:matsize)[-bgnodes]
   } else {mainnodes<-c(1:matsize)}
-  
+
   currentpermy<-startorder #starting order represented as a permutation
   currentorderscores<-orderscorePlus1(matsize,currentpermy[1:nsmall],c(1:nsmall),parenttable,aliases,numparents,rowmaps,plus1lists,scoretable,scoresmatrices,currentpermy) #starting score
   currenttotallogscore<-sum(currentorderscores$totscores[mainnodes]) #log total score of all DAGs in the starting order
   currentDAG<-samplescoreplus1(matsize,mainnodes,currentorderscores,plus1lists,scoretable,
                                scoresmatrices,parenttable,numberofparentsvec,aliases) #score of a single DAG sampled from the starting order
-  
+
   L1 <- list() # stores the adjacency matrix of a DAG sampled from the orders
   L2 <- vector() # stores its log BGe score of a DAG
   L3 <- vector() # stores the log BGe score of the entire order
@@ -29,32 +29,32 @@ orderMCMCplus1<-function(n,nsmall,startorder,iterations,stepsave,moveprobs,paren
   length(L2) <- zlimit
   length(L3) <- zlimit
   length(L4) <- zlimit
-  
+
   L1[[1]]<-currentDAG$incidence #starting DAG adjacency matrix
   L2[1]<-currentDAG$logscore #starting DAG score
   L3[1]<-currenttotallogscore #starting order score
   L4[[1]]<-currentpermy[1:nsmall] #starting order
   maxdag<-currentDAG$incidence
   maxscore<-L2[1]
-  
-  
+
+
   for (z in 2:zlimit){ #the MCMC chain loop with 'iteration' steps is in two parts
     for (count in 1:stepsave){ #since we only save the results to the lists each 'stepsave'
-      
-      
+
+
       chosenmove<-sample.int(4,1,prob=moveprobs)
       if(chosenmove<4){  # if it is 3 then we stay still
-        
+
         proposedpermy<-currentpermy #sample a new order by swapping two elements
         switch(as.character(chosenmove),
                "1"={ # swap any two elements at random
                  sampledelements<-sample.int(nsmall,2,replace=FALSE) #chosen at random
-                 
+
                },
                "2"={ # swap any adjacent elements
                  k<-sample.int(nsmall-1,1) #chose the smallest at random
                  sampledelements<-c(k,k+1)
-                 
+
                },
                "3"={ # swap any adjacent elements
                  sampledpos<-sample.int(nsmall,1)
@@ -62,7 +62,7 @@ orderMCMCplus1<-function(n,nsmall,startorder,iterations,stepsave,moveprobs,paren
                {# if neither is chosen, we have a problem
                  cat("The move sampling has failed!  \n")
                }) #end switch
-        
+
         if(chosenmove<3){
           scorepositions<-c(min(sampledelements):max(sampledelements))
           proposedpermy[sampledelements]<-currentpermy[rev(sampledelements)] #proposed new order ???
@@ -70,7 +70,7 @@ orderMCMCplus1<-function(n,nsmall,startorder,iterations,stepsave,moveprobs,paren
           proposedorderrescored<-orderscorePlus1(matsize,rescorenodes,scorepositions,parenttable,aliases,numparents,rowmaps,plus1lists,scoretable,scoresmatrices,proposedpermy)
           proposedtotallogscore<-currenttotallogscore-sum(currentorderscores$totscores[rescorenodes])+sum(proposedorderrescored$totscores[rescorenodes]) #and the new log total score by updating only the necessary nodes
           scoreratio<-exp((proposedtotallogscore-currenttotallogscore)*gamma) #acceptance probability
-          
+
           if(runif(1)<scoreratio){ #Move accepted then set the current order and scores to the proposal
             currentpermy<-proposedpermy
             currenttotallogscore<-proposedtotallogscore
@@ -102,7 +102,7 @@ orderMCMCplus1<-function(n,nsmall,startorder,iterations,stepsave,moveprobs,paren
     if(L2[z]>maxscore) {
       maxscore<-L2[z]
       maxdag<-currentDAG$incidence
-    } 
+    }
   }
 
   result$incidence<-L1
@@ -111,7 +111,7 @@ orderMCMCplus1<-function(n,nsmall,startorder,iterations,stepsave,moveprobs,paren
   result$orders<-L4
   result$maxscore<-maxscore
   result$maxdag<-Matrix(maxdag,sparse=TRUE)
-  
+
   return(result)
 }
 
